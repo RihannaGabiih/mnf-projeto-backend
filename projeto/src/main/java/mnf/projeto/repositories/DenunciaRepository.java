@@ -1,5 +1,8 @@
 package mnf.projeto.repositories;
 
-public class DenunciaRepository {
+import mnf.projeto.entity.Denuncia;
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface DenunciaRepository extends JpaRepository<Denuncia, Long> {
+    
 }
