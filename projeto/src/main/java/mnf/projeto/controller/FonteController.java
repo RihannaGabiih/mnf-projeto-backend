@@ -1,53 +1,48 @@
 package mnf.projeto.controller;
 
 import mnf.projeto.entity.Fonte;
-import mnf.projeto.repositories.FonteRepository;
+import mnf.projeto.service.FonteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/fontes")
 public class FonteController {
 
     @Autowired
-    private FonteRepository fonteRepository;
+    private FonteService fonteService;
 
-    // CREATE
     @PostMapping
-    public Fonte criarFonte(@RequestBody Fonte fonte) {
-        return fonteRepository.save(fonte);
+    public ResponseEntity<Fonte> criar(@RequestBody Fonte fonte) {
+        return ResponseEntity.ok(fonteService.criar(fonte));
     }
 
-    // READ ALL
     @GetMapping
-    public List<Fonte> listarFontes() {
-        return fonteRepository.findAll();
+    public ResponseEntity<List<Fonte>> listarTodas() {
+        return ResponseEntity.ok(fonteService.listarTodas());
     }
 
-    // READ BY ID
     @GetMapping("/{id}")
-    public Optional<Fonte> buscarFontePorId(@PathVariable Long id) {
-        return fonteRepository.findById(id);
+    public ResponseEntity<Fonte> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(fonteService.buscarPorId(id));
     }
 
-    // UPDATE
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<Fonte> buscarPorNome(@PathVariable String nome) {
+        return ResponseEntity.ok(fonteService.buscarPorNome(nome));
+    }
+
     @PutMapping("/{id}")
-    public Fonte atualizarFonte(@PathVariable Long id, @RequestBody Fonte fonteAtualizada) {
-        return fonteRepository.findById(id).map(fonte -> {
-            fonte.setNomeFonte(fonteAtualizada.getNomeFonte());
-            return fonteRepository.save(fonte);
-        }).orElseGet(() -> {
-            fonteAtualizada.setId(id);
-            return fonteRepository.save(fonteAtualizada);
-        });
+    public ResponseEntity<Fonte> atualizar(@PathVariable Long id, @RequestBody Fonte fonte) {
+        return ResponseEntity.ok(fonteService.atualizar(id, fonte));
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
-    public void deletarFonte(@PathVariable Long id) {
-        fonteRepository.deleteById(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        fonteService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

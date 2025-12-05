@@ -1,10 +1,14 @@
 package mnf.projeto.controller;
 
 import mnf.projeto.entity.Noticia;
-import mnf.projeto.repositories.NoticiaRepository;
+import mnf.projeto.entity.Fonte;
+import mnf.projeto.service.NoticiaService;
+import mnf.projeto.service.FonteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -12,44 +16,54 @@ import java.util.List;
 public class NoticiaController {
 
     @Autowired
-    private NoticiaRepository noticiaRepository;
+    private NoticiaService noticiaService;
 
-    // CREATE - Cadastrar uma nova notícia
+    @Autowired
+    private FonteService fonteService;
+
     @PostMapping
-    public Noticia criarNoticia(@RequestBody Noticia noticia) {
-        return noticiaRepository.save(noticia);
+    public ResponseEntity<Noticia> criar(@RequestBody Noticia noticia) {
+        return ResponseEntity.ok(noticiaService.criar(noticia));
     }
 
-    // READ - Listar todas as notícias
     @GetMapping
-    public List<Noticia> listarNoticias() {
-        return noticiaRepository.findAll();
+    public ResponseEntity<List<Noticia>> listarTodas() {
+        return ResponseEntity.ok(noticiaService.listarTodas());
     }
 
-    // READ - Buscar notícia por ID
     @GetMapping("/{id}")
-    public Noticia buscarNoticiaPorId(@PathVariable Long id) {
-        return noticiaRepository.findById(id).orElse(null);
+    public ResponseEntity<Noticia> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(noticiaService.buscarPorId(id));
     }
 
-    // UPDATE - Atualizar notícia por ID
     @PutMapping("/{id}")
-    public Noticia atualizarNoticia(@PathVariable Long id, @RequestBody Noticia noticiaAtualizada) {
-        return noticiaRepository.findById(id).map(noticia -> {
-            noticia.setTitulo(noticiaAtualizada.getTitulo());
-            noticia.setResumo(noticiaAtualizada.getResumo());
-            noticia.setDataPublicacao(noticiaAtualizada.getDataPublicacao());
-            noticia.setFonte(noticiaAtualizada.getFonte());
-            return noticiaRepository.save(noticia);
-        }).orElseGet(() -> {
-            noticiaAtualizada.setId(id);
-            return noticiaRepository.save(noticiaAtualizada);
-        });
+    public ResponseEntity<Noticia> atualizar(@PathVariable Long id, @RequestBody Noticia noticia) {
+        return ResponseEntity.ok(noticiaService.atualizar(id, noticia));
     }
 
-    // DELETE - Excluir notícia por ID
     @DeleteMapping("/{id}")
-    public void deletarNoticia(@PathVariable Long id) {
-        noticiaRepository.deleteById(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        noticiaService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/fonte/{nome}")
+    public ResponseEntity<List<Noticia>> listarPorFonte(@PathVariable String nome) {
+        Fonte fonte = fonteService.buscarPorNome(nome);
+        if (fonte != null) {
+            return ResponseEntity.ok(noticiaService.listarPorFonte(fonte));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/tema/{tema}")
+    public ResponseEntity<List<Noticia>> listarPorTema(@PathVariable String tema) {
+        return ResponseEntity.ok(noticiaService.listarPorTema(tema));
+    }
+
+    @GetMapping("/tempo/{data}")
+    public ResponseEntity<List<Noticia>> listarPorTempo(@PathVariable String data) {
+        LocalDate localDate = LocalDate.parse(data); // formato yyyy-MM-dd
+        return ResponseEntity.ok(noticiaService.listarPorTempo(localDate));
     }
 }
