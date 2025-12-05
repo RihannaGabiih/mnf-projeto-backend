@@ -6,18 +6,17 @@ public class UsuarioResponseDTO {
 	
 	private String nome;
 	private String nomeUsuario;
-	private String dataCadastro;
+
 	
 	public UsuarioResponseDTO(String nome, String nomeUsuario, String dataCadastro) {
 		this.nome = nome;
 		this.nomeUsuario = nomeUsuario;
-		this.dataCadastro = dataCadastro;
+
 	}
 	
 	public UsuarioResponseDTO(Usuario user) {
 		this.nome = user.getNome();
 		this.nomeUsuario = user.getNomeUsuario();
-		this.dataCadastro = user.getDataCadastro();
 	}
 
 
@@ -37,13 +36,7 @@ public class UsuarioResponseDTO {
 		this.nomeUsuario = nomeUsuario;
 	}
 
-	public String getDataCadastro() {
-		return dataCadastro;
-	}
-
-	public void setDataCadastro(String dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
+	
 	
 	
 	

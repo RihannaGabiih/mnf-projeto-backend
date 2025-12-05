@@ -69,7 +69,7 @@ public class UsuarioService {
 	    return new UsuarioResponseDTO(usuario);
 	}
 	
-	//atualizar usuario
+	//atualizar usuario por id
 	public UsuarioResponseDTO atualizar (long id, UsuarioRequestDTO novoUser) {
 		Optional<Usuario> userExistente = usuarioRepository.findById(id);
 		
@@ -92,7 +92,30 @@ public class UsuarioService {
 		
 	}
 	
-	//deletar usuario
+	//atualizar usuario por nomeUsuario
+	public UsuarioResponseDTO atualizarNomeUsuario (String nomeUsuario, UsuarioRequestDTO novoUser) {
+		Optional<Usuario> userExistente = usuarioRepository.findByNomeUsuario(nomeUsuario);
+		
+		if(userExistente.isPresent()) {
+			Usuario usuario = userExistente.get();
+			
+			usuario.setFotoPerfil(novoUser.getFotoPerfil());
+			usuario.setNome(novoUser.getNome());
+			usuario.setNomeUsuario(novoUser.getNomeUsuario());
+			usuario.setEmail(novoUser.getEmail());
+			usuario.setSenha(novoUser.getSenha());
+			
+			Usuario userAtualizado = usuarioRepository.save(usuario);
+			
+			UsuarioResponseDTO response = new UsuarioResponseDTO(userAtualizado);
+			return response;
+		} else {
+			return null;
+		}
+		
+	}
+	
+	//deletar usuario por id
 	public String deletar(long id) {
 		if(usuarioRepository.existsById(id)) {
 			usuarioRepository.deleteById(id);
@@ -102,6 +125,18 @@ public class UsuarioService {
 			return ("Esse id não existe");
 		}
 	}
+	//deletar usuario por nomeUsuatio
+	public String deletarPorNomeUsuario(String nomeUsuario) {
+	    Optional<Usuario> usuario = usuarioRepository.findByNomeUsuario(nomeUsuario);
+
+	    if(usuario.isPresent()) {
+	        usuarioRepository.delete(usuario.get());
+	        return "Usuário excluído com sucesso";
+	    } else {
+	        return "Esse nome de usuário não existe";
+	    }
+	}
+	
 	
 	
 

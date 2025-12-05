@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,7 @@ public class UsuarioController {
 	}
 	
 	//buscar por id
-	@GetMapping(value = "buscarId")
+	@GetMapping(value = "buscarId/{id}")
 	public ResponseEntity<?> usuarioId(@PathVariable long id){
 		UsuarioResponseDTO usuario = usuarioService.buscarUserId(id);
 		
@@ -71,7 +72,7 @@ public class UsuarioController {
 	}
 		
 	//buscar por nomeUsuario
-	@GetMapping(value = "buscarNomeUsuario")
+	@GetMapping(value = "buscarNomeUsuario/{nomeUsuario}")
 	public ResponseEntity<?> buscarNomeUsuario(@PathVariable String nomeUsuario){
 		UsuarioResponseDTO user = usuarioService.buscarNomeUsuario(nomeUsuario);
 		
@@ -83,15 +84,28 @@ public class UsuarioController {
 		}
 	}
 	
-	//atualizar usuario
-	@PutMapping(value = "atualizarUsuario")
+	//atualizar usuario por id
+	@PutMapping(value = "atualizarUsuario/{id}")
 	public ResponseEntity<?> atualizarUsuario(@PathVariable long id, @RequestBody UsuarioRequestDTO novo) {
 		return ResponseEntity.ok(usuarioService.atualizar(id, novo));
 	}
 	
+	//atualizar usuario por nomeUsuario
+		@PutMapping(value = "atualizarUsuarioNome/{nomeUsuario}")
+		public ResponseEntity<?> atualizarUsuarioNome(@PathVariable String nomeUsuario, @RequestBody UsuarioRequestDTO novo) {
+			return ResponseEntity.ok(usuarioService.atualizarNomeUsuario(nomeUsuario, novo));
+		}
+	
 	//deletar usuario
+	@DeleteMapping(value = "deletarUsuario/{id}")
 	public ResponseEntity<?> deletarUsuario(@PathVariable long id){
 		return ResponseEntity.ok(usuarioService.deletar(id));
+	}
+	
+	//deletar por nomeUsuario
+	@DeleteMapping(value = "/deletarNomeUsuario/{nomeUsuario}")
+	public ResponseEntity<String> deletarPorNomeUsuario(@PathVariable String nomeUsuario) {
+	    return ResponseEntity.ok(usuarioService.deletarPorNomeUsuario(nomeUsuario));
 	}
 		
 		

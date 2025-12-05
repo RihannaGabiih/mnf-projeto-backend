@@ -20,7 +20,6 @@ public class Usuario {
 	private String email;
 	private String senha;
 	private String fotoPerfil;
-	private String dataCadastro;
 	
 	public Usuario() {
 	
@@ -43,7 +42,6 @@ public class Usuario {
 		this.email = email;
 		this.senha = senha;
 		this.fotoPerfil = fotoPerfil;
-		this.dataCadastro = dataCadastro;
 	}
 
 	public long getId() {
@@ -94,13 +92,7 @@ public class Usuario {
 		this.fotoPerfil = fotoPerfil;
 	}
 
-	public String getDataCadastro() {
-		return dataCadastro;
-	}
 
-	public void setDataCadastro(String dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
 	
 	
 	
